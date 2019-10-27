@@ -14,6 +14,7 @@ namespace CafeteriaWebNew.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+
         public static bool validaCedula(string pCedula)
         {
             int vnTotal = 0;
@@ -38,7 +39,6 @@ namespace CafeteriaWebNew.Controllers
             else
                 return false;
         }
-
         // GET: Empleados
         public ActionResult Index()
         {
@@ -73,11 +73,10 @@ namespace CafeteriaWebNew.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Nombre,Cedula,Tanda,PorcientoComision,FechaIngreso,Estado")] Empleado empleado)
         {
-            if (!validaCedula(empleado.Cedula))
+            if (!validaCedula(usuario.Cedula))
             {
                 ModelState.AddModelError("Cedula", "Cedula invalida.");
             }
-
             if (ModelState.IsValid)
             {
                 db.Empleadoes.Add(empleado);
@@ -110,7 +109,7 @@ namespace CafeteriaWebNew.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Nombre,Cedula,Tanda,PorcientoComision,FechaIngreso,Estado")] Empleado empleado)
         {
-            if (!validaCedula(empleado.Cedula))
+            if (!validaCedula(usuario.Cedula))
             {
                 ModelState.AddModelError("Cedula", "Cedula invalida.");
             }

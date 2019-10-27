@@ -17,7 +17,7 @@ namespace CafeteriaWebNew.Models
         [Required]
         [MaxLength(13)]
         public string Cedula { get; set; }
-        public string Tanda { get; set; }
+        public Tanda Tanda { get; set; }
         [Range(0,100)]
         public double PorcientoComision { get; set; }
         [Required]
@@ -29,5 +29,12 @@ namespace CafeteriaWebNew.Models
     public class EmpleadoDbContext : ApplicationDbContext
     {
         public DbSet<Empleado> Empleados { get; set; }
+    }
+
+    public enum Tanda
+    {
+        Matutina,
+        Vespertina,
+        Nocturna
     }
 }
