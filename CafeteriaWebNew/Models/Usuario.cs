@@ -15,6 +15,7 @@ namespace CafeteriaWebNew.Models
         public int ID { get; set; }
         [Required]
         [MaxLength(100)]
+        [Display(Name = "Nombre de usuario")]
         public string Nombre { get; set; }
         [Required]
         [MaxLength(13)]
@@ -22,8 +23,12 @@ namespace CafeteriaWebNew.Models
         public string Tipo_UsuarioId { get; set; }
         [ForeignKey("Tipo_UsuarioId")]
         public virtual Tipo_Usuario Tipo_Usuario { get; set; }
+        [Range(0, double.MaxValue)]
+        [Display(Name = "Limite de credito")]
+        public double LimiteCredito { get; set; }
         [Required]
         [DataType(DataType.Date)]
+        [Display(Name = "Fecha de registro")]
         public DateTime FechaRegistro { get; set; }
         public Boolean Estado { get; set; }
 

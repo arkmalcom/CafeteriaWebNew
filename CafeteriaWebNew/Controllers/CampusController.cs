@@ -15,9 +15,9 @@ namespace CafeteriaWebNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Campus
-        public ActionResult Index()
+        public ActionResult Index(string Criterio = null)
         {
-            return View(db.Campus.ToList());
+            return View(db.Campus.Where(p => Criterio == null || p.Descripcion.StartsWith(Criterio)).ToList());
         }
 
         // GET: Campus/Details/5

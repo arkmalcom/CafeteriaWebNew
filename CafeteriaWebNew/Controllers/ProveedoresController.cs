@@ -56,9 +56,10 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Proveedores
-        public ActionResult Index()
+        public ActionResult Index(string Criterio = null)
         {
-            return View(db.Proveedors.ToList());
+            return View(db.Proveedors.Where(p => Criterio == null || p.Nombre.StartsWith(Criterio) ||
+            p.RNC.StartsWith(Criterio)).ToList());
         }
 
         // GET: Proveedores/Details/5

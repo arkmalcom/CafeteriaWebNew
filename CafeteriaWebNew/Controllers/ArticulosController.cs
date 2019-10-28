@@ -15,10 +15,12 @@ namespace CafeteriaWebNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Articulos
-        public ActionResult Index()
+        public ActionResult Index(string Criterio = null)
         {
             var articuloes = db.Articuloes.Include(a => a.Marca).Include(a => a.Proveedor);
-            return View(articuloes.ToList());
+            return View(articuloes.Where(p => Criterio == null || p.Descripcion.StartsWith(Criterio) ||
+            p.Marca.Descripcion.StartsWith(Criterio) ||
+            p.Proveedor.Nombre.StartsWith(Criterio)).ToList());
         }
 
         // GET: Articulos/Details/5

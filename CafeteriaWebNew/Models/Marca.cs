@@ -13,6 +13,7 @@ namespace CafeteriaWebNew.Models
         public int ID { get; set; }
         [Required]
         [MaxLength(100)]
+        [Display(Name = "Marca")]
         public string Descripcion { get; set; }
         public Boolean Estado { get; set; }
     }
