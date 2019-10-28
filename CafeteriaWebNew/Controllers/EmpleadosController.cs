@@ -39,9 +39,11 @@ namespace CafeteriaWebNew.Controllers
                 return false;
         }
         // GET: Empleados
-        public ActionResult Index()
+        public ActionResult Index(string Criterio = null)
         {
-            return View(db.Empleadoes.ToList());
+            return View(db.Empleadoes.Where(p=> Criterio == null || p.Cedula.StartsWith(Criterio) ||
+            p.Nombre.StartsWith(Criterio) ||
+            p.Tanda.ToString().StartsWith(Criterio) || p.PorcientoComision.ToString().StartsWith(Criterio)).ToList());
         }
 
         // GET: Empleados/Details/5

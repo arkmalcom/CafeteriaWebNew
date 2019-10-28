@@ -13,11 +13,13 @@ namespace CafeteriaWebNew.Models
         public int ID { get; set; }
         [Required]
         [MaxLength(100)]
+        [Display(Name = "Proveedor")]
         public string Nombre { get; set; }
         [Required]
         [MaxLength(9)]
         public string RNC { get; set; }
         [DataType(DataType.Date)]
+        [Display(Name = "Fecha de registro")]
         public DateTime FechaRegistro { get; set; }
         public Boolean Estado { get; set; }
     }

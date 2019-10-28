@@ -15,9 +15,9 @@ namespace CafeteriaWebNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Tipo_Usuario
-        public ActionResult Index()
+        public ActionResult Index(string Criterio = null)
         {
-            return View(db.IdentityRoles.ToList());
+            return View(db.IdentityRoles.Where(p => Criterio == null || p.Name.StartsWith(Criterio)).ToList());
         }
 
         // GET: Tipo_Usuario/Details/5

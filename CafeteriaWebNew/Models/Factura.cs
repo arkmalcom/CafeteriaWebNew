@@ -23,6 +23,7 @@ namespace CafeteriaWebNew.Models
         public virtual Usuario Usuario { get; set; }
         [Required]
         [DataType(DataType.Date)]
+        [Display(Name = "Fecha de venta")]
         public DateTime FechaVenta { get; set; }
         [Required]
         [Range(0, double.MaxValue)]

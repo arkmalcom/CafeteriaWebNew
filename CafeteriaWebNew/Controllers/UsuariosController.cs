@@ -12,7 +12,6 @@ namespace CafeteriaWebNew.Controllers
 {
     public class UsuariosController : Controller
     {
-
         private ApplicationDbContext db = new ApplicationDbContext();
 
         public static bool validaCedula(string pCedula)
@@ -40,10 +39,12 @@ namespace CafeteriaWebNew.Controllers
                 return false;
         }
         // GET: Usuarios
-        public ActionResult Index()
+        public ActionResult Index(string Criterio = null)
         {
             var usuarios = db.Usuarios.Include(u => u.Tipo_Usuario);
-            return View(usuarios.ToList());
+            return View(usuarios.Where(p => Criterio == null || p.Nombre.StartsWith(Criterio) || 
+            p.LimiteCredito.ToString().StartsWith(Criterio) || p.Cedula.StartsWith(Criterio) ||
+            p.Tipo_Usuario.Name.StartsWith(Criterio)).ToList());
         }
 
         // GET: Usuarios/Details/5
@@ -64,7 +65,7 @@ namespace CafeteriaWebNew.Controllers
         // GET: Usuarios/Create
         public ActionResult Create()
         {
-            ViewBag.Tipo_UsuarioId = new SelectList(db.IdentityRoles, "Id", "Name");
+            ViewBag.Tipo_UsuarioId = new SelectList(db.Roles, "Id", "Name");
             return View();
         }
 
@@ -73,7 +74,7 @@ namespace CafeteriaWebNew.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Nombre,Cedula,Tipo_UsuarioId,FechaRegistro,Estado")] Usuario usuario)
+        public ActionResult Create([Bind(Include = "ID,Nombre,Cedula,Tipo_UsuarioId,LimiteCredito,FechaRegistro,Estado")] Usuario usuario)
         {
             if (!validaCedula(usuario.Cedula))
             {
@@ -86,7 +87,7 @@ namespace CafeteriaWebNew.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Tipo_UsuarioId = new SelectList(db.IdentityRoles, "Id", "Name", usuario.Tipo_UsuarioId);
+            ViewBag.Tipo_UsuarioId = new SelectList(db.Roles, "Id", "Name", usuario.Tipo_UsuarioId);
             return View(usuario);
         }
 
@@ -102,7 +103,7 @@ namespace CafeteriaWebNew.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Tipo_UsuarioId = new SelectList(db.IdentityRoles, "Id", "Name", usuario.Tipo_UsuarioId);
+            ViewBag.Tipo_UsuarioId = new SelectList(db.Roles, "Id", "Name", usuario.Tipo_UsuarioId);
             return View(usuario);
         }
 
@@ -111,20 +112,19 @@ namespace CafeteriaWebNew.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Nombre,Cedula,Tipo_UsuarioId,FechaRegistro,Estado")] Usuario usuario)
+        public ActionResult Edit([Bind(Include = "ID,Nombre,Cedula,Tipo_UsuarioId,LimiteCredito,FechaRegistro,Estado")] Usuario usuario)
         {
             if (!validaCedula(usuario.Cedula))
             {
                 ModelState.AddModelError("Cedula", "Cedula invalida.");
             }
-
             if (ModelState.IsValid)
             {
                 db.Entry(usuario).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Tipo_UsuarioId = new SelectList(db.IdentityRoles, "Id", "Name", usuario.Tipo_UsuarioId);
+            ViewBag.Tipo_UsuarioId = new SelectList(db.Roles, "Id", "Name", usuario.Tipo_UsuarioId);
             return View(usuario);
         }
 

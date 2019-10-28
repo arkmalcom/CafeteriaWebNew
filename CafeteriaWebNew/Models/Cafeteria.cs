@@ -14,6 +14,7 @@ namespace CafeteriaWebNew.Models
         public int ID { get; set; }
         [Required]
         [MaxLength(60)]
+        [Display(Name = "Nombre de cafeteria")]
         public string Descripcion { get; set; }
         public virtual int CampusId { get; set; }
         [ForeignKey("CampusId")]

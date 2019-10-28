@@ -13,12 +13,14 @@ namespace CafeteriaWebNew.Models
         [Key]
         public int ID { get; set; }
         [Required]
+        [Display(Name = "Descripcion de articulo")]
         public string Descripcion { get; set; }
         public virtual int MarcaId { get; set; }
         [ForeignKey("MarcaId")]
         public virtual Marca Marca { get; set; }
         [Range(1, double.MaxValue)]
         public double Costo { get; set; }
+        [Display(Name = "Proveedor")]
         public virtual int ProveedorId { get; set; }
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }
