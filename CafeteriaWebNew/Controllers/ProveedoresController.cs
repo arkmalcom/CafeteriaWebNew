@@ -56,6 +56,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Proveedores
+        [Authorize(Roles = "Administrador")]
         public ActionResult Index(string Criterio = null)
         {
             return View(db.Proveedors.Where(p => Criterio == null || p.Nombre.StartsWith(Criterio) ||
@@ -63,6 +64,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Proveedores/Details/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -78,6 +80,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Proveedores/Create
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create()
         {
             return View();
@@ -106,6 +109,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Proveedores/Edit/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -141,6 +145,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Proveedores/Delete/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

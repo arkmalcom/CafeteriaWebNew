@@ -19,6 +19,7 @@ namespace CafeteriaWebNew.Models
         [MaxLength(9)]
         public string RNC { get; set; }
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de registro")]
         public DateTime FechaRegistro { get; set; }
         public Boolean Estado { get; set; }

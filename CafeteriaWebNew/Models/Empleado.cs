@@ -24,7 +24,7 @@ namespace CafeteriaWebNew.Models
         public double PorcientoComision { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de ingreso")]
         public DateTime FechaIngreso { get; set; }
         public Boolean Estado { get; set; }
