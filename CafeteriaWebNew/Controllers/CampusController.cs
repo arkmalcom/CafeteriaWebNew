@@ -15,12 +15,14 @@ namespace CafeteriaWebNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Campus
+        [Authorize(Roles = "Administrador")]
         public ActionResult Index(string Criterio = null)
         {
             return View(db.Campus.Where(p => Criterio == null || p.Descripcion.StartsWith(Criterio)).ToList());
         }
 
         // GET: Campus/Details/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -36,6 +38,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Campus/Create
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create()
         {
             return View();
@@ -59,6 +62,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Campus/Edit/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -90,6 +94,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Campus/Delete/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

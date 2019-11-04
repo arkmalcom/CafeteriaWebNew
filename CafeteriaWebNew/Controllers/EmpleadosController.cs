@@ -39,6 +39,7 @@ namespace CafeteriaWebNew.Controllers
                 return false;
         }
         // GET: Empleados
+        [Authorize(Roles = "Administrador")]
         public ActionResult Index(string Criterio = null)
         {
             return View(db.Empleadoes.Where(p=> Criterio == null || p.Cedula.StartsWith(Criterio) ||
@@ -47,6 +48,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Empleados/Details/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -62,6 +64,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Empleados/Create
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create()
         {
             return View();
@@ -89,6 +92,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Empleados/Edit/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -124,6 +128,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Empleados/Delete/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

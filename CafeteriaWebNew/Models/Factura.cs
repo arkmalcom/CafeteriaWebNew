@@ -23,6 +23,7 @@ namespace CafeteriaWebNew.Models
         public virtual Usuario Usuario { get; set; }
         [Required]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de venta")]
         public DateTime FechaVenta { get; set; }
         [Required]
