@@ -39,6 +39,7 @@ namespace CafeteriaWebNew.Controllers
                 return false;
         }
         // GET: Usuarios
+        [Authorize(Roles = "Administrador")]
         public ActionResult Index(string Criterio = null)
         {
             var usuarios = db.Usuarios.Include(u => u.Tipo_Usuario);
@@ -48,6 +49,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Usuarios/Details/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -63,6 +65,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Usuarios/Create
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create()
         {
             ViewBag.Tipo_UsuarioId = new SelectList(db.Roles, "Id", "Name");
@@ -92,6 +95,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Usuarios/Edit/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -129,6 +133,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Usuarios/Delete/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

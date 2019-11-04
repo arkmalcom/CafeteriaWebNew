@@ -15,6 +15,7 @@ namespace CafeteriaWebNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Cafeterias
+        [Authorize(Roles = "Administrador")]
         public ActionResult Index(string Criterio = null)
         {
             var cafeterias = db.Cafeterias.Include(c => c.Campus);
@@ -23,6 +24,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Cafeterias/Details/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -38,6 +40,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Cafeterias/Create
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create()
         {
             ViewBag.CampusId = new SelectList(db.Campus, "ID", "Descripcion");
@@ -63,6 +66,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Cafeterias/Edit/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -96,6 +100,7 @@ namespace CafeteriaWebNew.Controllers
         }
 
         // GET: Cafeterias/Delete/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
