@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -13,6 +14,38 @@ namespace CafeteriaWebNew.Controllers
     public class ArticulosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        public ActionResult exportaExcel()
+        {
+            string filename = "Articulos.csv";
+            string filepath = @"c:\tmp\" + filename;
+            StreamWriter sw = new StreamWriter(filepath);
+            sw.WriteLine("ID,Descripcion,Marca,Costo,Proveedor,Existencia,Estado"); //Encabezado 
+            foreach (var i in db.Articuloes.ToList())
+            {
+                if (i.Estado) {
+                    sw.WriteLine(i.ID.ToString() + "," + i.Descripcion + "," + i.Marca.Descripcion + "," + i.Costo.ToString() + "," + i.Proveedor.Nombre + "," + i.Existencia.ToString() + "," + "Activo");
+                }
+                else
+                {
+                    sw.WriteLine(i.ID.ToString() + "," + i.Descripcion + "," + i.Marca.Descripcion + "," + i.Costo.ToString() + "," + i.Proveedor.Nombre + "," + i.Existencia.ToString() + "," + "Inactivo");
+                }
+            }
+            sw.Close();
+
+            byte[] filedata = System.IO.File.ReadAllBytes(filepath);
+            string contentType = MimeMapping.GetMimeMapping(filepath);
+
+            var cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = filename,
+                Inline = false,
+            };
+
+            Response.AppendHeader("Content-Disposition", cd.ToString());
+
+            return File(filedata, contentType);
+        }
 
         // GET: Articulos
         [Authorize(Roles = "Administrador")]

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -13,7 +14,38 @@ namespace CafeteriaWebNew.Controllers
     public class CampusController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        public ActionResult exportaExcel()
+        {
+            string filename = "Campus.csv";
+            string filepath = @"c:\tmp\" + filename;
+            StreamWriter sw = new StreamWriter(filepath);
+            sw.WriteLine("ID,Descripcion,Estado"); //Encabezado 
+            foreach (var i in db.Campus.ToList())
+            {
+                if (i.Estado)
+                {
+                    sw.WriteLine(i.ID.ToString() + "," + i.Descripcion + "," + "Activo");
+                }
+                else
+                {
+                    sw.WriteLine(i.ID.ToString() + "," + i.Descripcion + "," + "Inactivo");
+                }
+            }
+            sw.Close();
 
+            byte[] filedata = System.IO.File.ReadAllBytes(filepath);
+            string contentType = MimeMapping.GetMimeMapping(filepath);
+
+            var cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = filename,
+                Inline = false,
+            };
+
+            Response.AppendHeader("Content-Disposition", cd.ToString());
+
+            return File(filedata, contentType);
+        }
         // GET: Campus
         [Authorize(Roles = "Administrador")]
         public ActionResult Index(string Criterio = null)

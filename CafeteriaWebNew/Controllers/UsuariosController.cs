@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -12,6 +13,40 @@ namespace CafeteriaWebNew.Controllers
 {
     public class UsuariosController : Controller
     {
+        public ActionResult exportaExcel()
+        {
+            string filename = "Usuarios.csv";
+            string filepath = @"c:\tmp\" + filename;
+            StreamWriter sw = new StreamWriter(filepath);
+            sw.WriteLine("ID,Nombre,Cedula,Tipo de Usuario,Limite de credito,Fecha de Registro,Estado"); //Encabezado 
+            foreach (var i in db.Usuarios.ToList())
+            {
+                if (i.Estado)
+                {
+                    sw.WriteLine(i.ID.ToString() + "," + i.Nombre + "," + i.Cedula + "," + i.Tipo_Usuario.Name + "," + i.LimiteCredito.ToString()
+                        + "," + i.FechaRegistro.ToString()+"," + "Activo");
+                }
+                else
+                {
+                    sw.WriteLine(i.ID.ToString() + "," + i.Nombre + "," + i.Cedula + "," + i.Tipo_Usuario.Name + "," + i.LimiteCredito.ToString()
+                        + "," + i.FechaRegistro.ToString() + "," + "Inactivo");
+                }
+            }
+            sw.Close();
+
+            byte[] filedata = System.IO.File.ReadAllBytes(filepath);
+            string contentType = MimeMapping.GetMimeMapping(filepath);
+
+            var cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = filename,
+                Inline = false,
+            };
+
+            Response.AppendHeader("Content-Disposition", cd.ToString());
+
+            return File(filedata, contentType);
+        }
         private ApplicationDbContext db = new ApplicationDbContext();
 
         public static bool validaCedula(string pCedula)
@@ -79,9 +114,14 @@ namespace CafeteriaWebNew.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Nombre,Cedula,Tipo_UsuarioId,LimiteCredito,FechaRegistro,Estado")] Usuario usuario)
         {
+            Empleado empleado = (from r in db.Empleadoes.Where(a => a.Cedula == usuario.Cedula) select r).FirstOrDefault();
             if (!validaCedula(usuario.Cedula))
             {
                 ModelState.AddModelError("Cedula", "Cedula invalida.");
+            }
+            if (empleado.Cedula != null && usuario.Nombre != empleado.Nombre)
+            {
+                ModelState.AddModelError("Cedula", "Esta cedula esta registrada bajo el nombre de " + empleado.Nombre);
             }
             if (ModelState.IsValid)
             {
@@ -118,9 +158,14 @@ namespace CafeteriaWebNew.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Nombre,Cedula,Tipo_UsuarioId,LimiteCredito,FechaRegistro,Estado")] Usuario usuario)
         {
+            Empleado empleado = (from r in db.Empleadoes.Where(a => a.Cedula == usuario.Cedula) select r).FirstOrDefault();
             if (!validaCedula(usuario.Cedula))
             {
                 ModelState.AddModelError("Cedula", "Cedula invalida.");
+            }
+            if (empleado.Cedula != null && empleado.Nombre != usuario.Nombre)
+            {
+                ModelState.AddModelError("Cedula", "Esta cedula esta registrada bajo el nombre de " + empleado.Nombre);
             }
             if (ModelState.IsValid)
             {

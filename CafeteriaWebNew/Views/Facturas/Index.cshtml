@@ -9,6 +9,9 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<p>
+    @Html.ActionLink("Exporta a Excel", "exportaExcel")
+</p>
 <form method="get">
     <div class="input-group">
         <input class="form-control" type="text" id="Criterio" name="Criterio" />
@@ -17,7 +20,7 @@
         </span>
     </div>
 </form>
-<table class="table">
+<table class="table table-condensed table-striped">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Articulo.Descripcion)

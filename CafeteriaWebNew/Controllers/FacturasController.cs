@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -14,6 +15,40 @@ namespace CafeteriaWebNew.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        public ActionResult exportaExcel()
+        {
+            string filename = "Facturas.csv";
+            string filepath = @"c:\tmp\" + filename;
+            StreamWriter sw = new StreamWriter(filepath);
+            sw.WriteLine("ID,Empleado,Articulo,Usuario,Fecha de venta,Monto,Cantidad,Comentario,Estado"); //Encabezado 
+            foreach (var i in db.Facturas.ToList())
+            {
+                if (i.Estado)
+                {
+                    sw.WriteLine(i.ID.ToString() + "," + i.Empleado.Nombre + "," + i.Articulo.Descripcion + "," + i.Usuario.Nombre + "," + i.FechaVenta.ToString() + "," + "$" + i.Monto
+                         + ","+ i.Cantidad + "," + i.Comentario + "," + "Activo");
+                }
+                else
+                {
+                    sw.WriteLine(i.ID.ToString() + "," + i.Empleado.Nombre + "," + i.Articulo.Descripcion + "," + i.Usuario.Nombre + "," + i.FechaVenta.ToString() + "," + "$" + i.Monto
+                        + "," + i.Cantidad + "," + i.Comentario + "," + "Inactivo");
+                }
+            }
+            sw.Close();
+
+            byte[] filedata = System.IO.File.ReadAllBytes(filepath);
+            string contentType = MimeMapping.GetMimeMapping(filepath);
+
+            var cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = filename,
+                Inline = false,
+            };
+
+            Response.AppendHeader("Content-Disposition", cd.ToString());
+
+            return File(filedata, contentType);
+        }
         // GET: Facturas
         [Authorize(Roles = "Administrador")]
         public ActionResult Index(string Criterio = null)
@@ -47,6 +82,7 @@ namespace CafeteriaWebNew.Controllers
             ViewBag.ArticuloId = new SelectList(db.Articuloes, "ID", "Descripcion");
             ViewBag.EmpleadoId = new SelectList(db.Empleadoes, "ID", "Nombre");
             ViewBag.UsuarioId = new SelectList(db.Usuarios, "ID", "Nombre");
+
             return View();
         }
 
@@ -57,13 +93,23 @@ namespace CafeteriaWebNew.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,EmpleadoId,ArticuloId,UsuarioId,FechaVenta,Monto,Cantidad,Comentario,Estado")] Factura factura)
         {
+            Articulo articulo = (from r in db.Articuloes.Where(a => a.ID == factura.ArticuloId) select r).FirstOrDefault();
+            if (articulo.Estado == false)
+            {
+                ModelState.AddModelError("Cantidad", "Este articulo no esta abilitado para la venta");
+            }
+            else if (factura.Cantidad > articulo.Existencia)
+            {
+                ModelState.AddModelError("Cantidad", "Cantidad excede la existencia del articulo");
+            }
             if (ModelState.IsValid)
             {
                 db.Facturas.Add(factura);
                 db.SaveChanges();
+                articulo.Existencia = articulo.Existencia - factura.Cantidad;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             ViewBag.ArticuloId = new SelectList(db.Articuloes, "ID", "Descripcion", factura.ArticuloId);
             ViewBag.EmpleadoId = new SelectList(db.Empleadoes, "ID", "Nombre", factura.EmpleadoId);
             ViewBag.UsuarioId = new SelectList(db.Usuarios, "ID", "Nombre", factura.UsuarioId);

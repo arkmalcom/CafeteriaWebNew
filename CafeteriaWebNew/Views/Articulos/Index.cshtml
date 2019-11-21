@@ -9,6 +9,9 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<p>
+    @Html.ActionLink("Exporta a Excel", "exportaExcel")
+</p>
 
 <form method="get">
     <div class="input-group">
@@ -19,7 +22,7 @@
     </div>
 </form>
 
-<table class="table">
+<table class="table table-condensed table-striped">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Marca.Descripcion)

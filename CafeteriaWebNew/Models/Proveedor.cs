@@ -17,6 +17,7 @@ namespace CafeteriaWebNew.Models
         public string Nombre { get; set; }
         [Required]
         [MaxLength(9)]
+        [MinLength(9)]
         public string RNC { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

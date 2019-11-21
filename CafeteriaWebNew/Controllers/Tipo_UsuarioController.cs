@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -12,6 +13,38 @@ namespace CafeteriaWebNew.Controllers
 {
     public class Tipo_UsuarioController : Controller
     {
+        public ActionResult exportaExcel()
+        {
+            string filename = "TiposUsuario.csv";
+            string filepath = @"c:\tmp\" + filename;
+            StreamWriter sw = new StreamWriter(filepath);
+            sw.WriteLine("ID,Descripcion,Estado"); //Encabezado 
+            foreach (var i in db.IdentityRoles.ToList())
+            {
+                if (i.Estado)
+                {
+                    sw.WriteLine(i.Id.ToString() + "," + i.Name + "," + "Activo");
+                }
+                else
+                {
+                    sw.WriteLine(i.Id.ToString() + "," + i.Name + "," + "Inactivo");
+                }
+            }
+            sw.Close();
+
+            byte[] filedata = System.IO.File.ReadAllBytes(filepath);
+            string contentType = MimeMapping.GetMimeMapping(filepath);
+
+            var cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = filename,
+                Inline = false,
+            };
+
+            Response.AppendHeader("Content-Disposition", cd.ToString());
+
+            return File(filedata, contentType);
+        }
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Tipo_Usuario
